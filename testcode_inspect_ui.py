@@ -116,9 +116,6 @@ class TestCodeUI(SuperWindow):
 
 
 if __name__ == '__main__':
-    # path = 'C:/00_git/bpt-artists/src/'
-    # if path not in sys.path:
-    #     sys.path.append(path)
     # Create the Qt Application
     app = QtWidgets.QApplication(sys.argv)
 
