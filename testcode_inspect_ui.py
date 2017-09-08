@@ -91,9 +91,11 @@ class TestCodeUI(SuperWindow):
         self._update_system_tree(self.current_dir)
 
         # Create output section that tests get printed out to | Right Panel
-        text_display = QtWidgets.QTextEdit('This is going to be the place '
+        text_display = QtWidgets.QLineEdit('This is going to be the place '
                                            'where I display output from the '
                                            'unittests')
+        text_display.setReadOnly(True)
+        text_display.setAlignment(QtCore.Qt.AlignTop)
 
         self.btn = QtWidgets.QPushButton('^')
         self.btn.setFixedWidth(25)
