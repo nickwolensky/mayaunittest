@@ -7,12 +7,9 @@ Todo:
 """
 import os
 import sys
-# path = 'C:/00_git/bpt-artists/src/'
-# if path not in sys.path:
-#     sys.path.append(path)
-
 from nw_tools.Qt import QtWidgets, QtGui, QtCore
 from nw_tools.ui.tools import get_maya_window, SuperWindow
+import runmayatests
 
 
 class Tree(QtWidgets.QTreeView):
@@ -113,7 +110,11 @@ class TestCodeUI(SuperWindow):
         # Open command
         # self.open_dir_action.triggered.connect(self.update_system_tree)
         # Run command
-        self.run_action.triggered.connect(self.get_selected_dir)
+
+        def run_tests():
+            runmayatests.main(test_dir=[self.get_selected_dir()])
+
+        self.run_action.triggered.connect(run_tests)
         # Stop command
         # self.stop_action.triggered.connect(self.dir_up)
 
@@ -122,7 +123,9 @@ class TestCodeUI(SuperWindow):
 
     def get_selected_dir(self):
         index = self.tree.currentIndex()
-        return self.model.filePath(index)
+        path = self.model.filePath(index)
+        print path
+        return path
 
     def _update_system_tree(self, directory):
         self.tree.setRootIndex(self.model.index(directory))

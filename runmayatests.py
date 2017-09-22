@@ -131,10 +131,13 @@ def grab_directories_to_run_tests(paths=None):
                  and not d.startswith('.')
                  and not d.startswith('_')]
     return ';'.join(paths)
-	
 
 
-def main():
+def main(maya_version=None,
+         maya_app_dir=None,
+         maya_location=None,
+         test_dir=None,
+         rel_test_path=None):
     global UNITTEST_PATH
     # Provide top directory, relative path or project name, or absolute path
     # to test directory
@@ -155,13 +158,18 @@ def main():
     parser.add_argument('-m_dir', '--maya_directory',
                         help='Maya directory location')
     parser.add_argument('-t', '--test',
-                        default='', 
+                        default='',
                         help='Add optional test string')
 
     pargs = parser.parse_args()
 
-    maya_module_string = grab_directories_to_run_tests(pargs.directory)
-    test_str = pargs.test
+    maya_version = maya_version if maya_version else pargs.maya
+    maya_app_dir = maya_app_dir if maya_app_dir else pargs.maya_app_dir
+    maya_location = maya_location if maya_location else pargs.maya_directory
+    test_dir = test_dir if test_dir else pargs.directory
+    rel_test_path = rel_test_path if rel_test_path else pargs.test
+
+    maya_module_string = grab_directories_to_run_tests(test_dir)
 
     # Test whether or not UNNITEST is found before running the testing commands
     while not os.path.isfile(UNITTEST_PATH):
@@ -172,10 +180,10 @@ def main():
         except Exception:
             raise RuntimeError('You must provide a string directory path.\n')
 
-    cmd = [mayapy(pargs.maya, pargs.maya_directory), UNITTEST_PATH,
-           maya_module_string, test_str]
+    cmd = [mayapy(maya_version, maya_location), UNITTEST_PATH,
+           maya_module_string, rel_test_path]
 
-    app_directory = pargs.maya_app_dir
+    app_directory = maya_app_dir
     maya_app_dir = create_clean_maya_app_dir(app_directory)
     # Create clean prefs
     os.environ['MAYA_APP_DIR'] = maya_app_dir
@@ -183,6 +191,8 @@ def main():
     os.environ['MAYA_SCRIPT_PATH'] = ''
     # Run the tests in this module.
     os.environ['MAYA_MODULE_PATH'] = maya_module_string
+
+    print test_dir
     try:
         subprocess.check_call(cmd)
     except subprocess.CalledProcessError as e:

@@ -56,14 +56,14 @@ def run_tests(directories=None, test=None, test_suite=None):
     runner = unittest.TextTestRunner(verbosity=2, resultclass=TestResult)
     runner.failfast = False
     runner.buffer = Settings.buffer_output
-    
-	# Group each suite and run them separately for better log
+
+    # Group each suite and run them separately for better log
     fail = 0
     for suite in test_suite:
         fail += 1 if not runner.run(suite).wasSuccessful() else 0
-	
-	if fail:
-	    sys.exit(2)
+
+    if fail:
+        sys.exit(2)
 
 
 def get_tests(directories=None, test=None, test_suite=None):
@@ -95,6 +95,7 @@ def get_tests(directories=None, test=None, test_suite=None):
         # Find all tests to run
         directories_added_to_path = []
         for p in directories:
+            print p
             discovered_suite = unittest.TestLoader().discover(p)
             if discovered_suite.countTestCases():
                 test_suite.addTests(discovered_suite)
@@ -137,11 +138,12 @@ def run_tests_from_commandline(directories=None, test=None):
             sys.path.insert(0, p)
 
     # Append directory of my desired test packages to the sys.path
-    #for directory in directories:
-     #   dir_name = os.path.dirname(directory)
-      #  if dir_name not in sys.path:
-       #     sys.path.insert(0, dir_name)
+    # for directory in directories:
+    #    dir_name = os.path.dirname(directory)
+    #    if dir_name not in sys.path:
+    #        sys.path.insert(0, dir_name)
 
+    print directories
     run_tests(directories=directories, test=test)
 
     # Starting Maya 2016, we have to call uninitialize
