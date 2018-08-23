@@ -7,6 +7,9 @@ Todo:
 """
 import os
 import sys
+path = 'E:/documents/Development'
+if path not in sys.path:
+    sys.path.insert(0, path)
 from nw_tools.Qt import QtWidgets, QtGui, QtCore
 from nw_tools.ui.tools import get_maya_window, SuperWindow
 import runmayatests
